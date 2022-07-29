@@ -1,8 +1,5 @@
 import pandas as pd
 
-# Determine a lesson
-lesson = input("\n" + "Lesson: ")
-
 """
 Grade range:
 90-100  AA Pass
@@ -32,7 +29,7 @@ def set_student_status(grade):
         letter_grade = 'CB'
         status = 'Pass'
     elif grade >= 60 and grade <= 69:
-        letter_grade = 'Cc'
+        letter_grade = 'CC'
         status = 'Pass'
     elif grade >= 50 and grade <= 59:
         letter_grade = 'DC'
@@ -49,11 +46,46 @@ def set_student_status(grade):
     
     return letter_grade, status
 
+class Student():
+    
+    def __init__(self, name, surname, school_number, grade, letter_grade, lesson, status):
+        self.name = name
+        self.surname = surname
+        self.school_number = school_number
+        self.grade = grade
+        self.letter_grade = letter_grade
+        self.lesson = lesson
+        self.status = status
+    
+    def info(self):
+        return self.name, self.surname, self.school_number, self.grade, self.letter_grade, self.lesson, self.status
+
+# Determine a lesson
+lesson = input("\n" + "Lesson: ")
+
 students = list()
+students_index = 0
 control = 1
 
-while control:
+while True:
     
+    # Created using the class / Usage with class
+    if control == 1:
+        student_name = input("\n" + "Name: ")
+        student_surname = input("Surname: ")
+        student_school_number = input("School number: ")
+        student_grade = int(input("Grade: "))
+        
+        student_letter_grade, student_status = set_student_status(student_grade)
+        student_temp = Student(student_name, student_surname, student_school_number, student_grade, student_letter_grade, lesson, student_status)
+        students.insert(students_index, student_temp)
+        students_index += 1
+        control = int(input("\n" + "[Press '1' to Continue or Press '0' to Terminate]: "))
+    else:
+        break
+    
+    """
+    # Usage with Dictionary
     student = {
         "Name": "",
         "Surname": "",
@@ -71,33 +103,33 @@ while control:
     student["Lesson"] = lesson
     
     student["Letter grade"], student["Status"] = set_student_status(student["Grade"])
-    
-    students.append(student)
 
     # Check loop continuity
     control = int(input("\n" + "[Press '1' to Continue or Press '0' to Terminate]: "))
     if control == 0:
         break
+    """
 
 print("\n", students)
 
 # DataFrame creation
-df = pd.read_excel("student_grading_system.xlsx")
-
 my_columns = ['Name', 'Surname', 'Number', 'Grade', 'Letter Grade', 'Status', 'Lesson']
+df = pd.DataFrame(columns = my_columns)
+
 for student in students:
     df = df.append(
         {
-            'Name': student["Name"],
-            'Surname': student["Surname"],
-            'Number': student["School number"],
-            'Grade': student["Grade"],
-            'Letter Grade': student["Letter grade"],
-            'Status': student["Status"],
-            'Lesson': student["Lesson"]
-        },ignore_index = True
+            'Name': student.name,
+            'Surname': student.surname,
+            'Number': student.school_number,
+            'Grade': student.grade,
+            'Letter Grade': student.letter_grade,
+            'Status': student.status,
+            'Lesson': student.lesson
+        }, ignore_index = True
     )
 
 print("\n", df)
 
+# DataFrame to Excel
 df.to_excel("student_grading_system.xlsx")
