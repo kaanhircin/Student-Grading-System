@@ -57,8 +57,11 @@ class Student():
         self.lesson = lesson
         self.status = status
     
+    """
+    # For print test
     def info(self):
         return self.name, self.surname, self.school_number, self.grade, self.letter_grade, self.lesson, self.status
+    """
 
 # Determine a lesson
 lesson = input("\n" + "Lesson: ")
